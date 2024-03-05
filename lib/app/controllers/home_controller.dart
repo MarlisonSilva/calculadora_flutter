@@ -7,6 +7,12 @@ class HomeController {
   ValueNotifier<bool> isCalculable = ValueNotifier(true);
   String currentNum = '0';
 
+  bool isPercentable(){
+    if (currentNum != '' && isNotOp(answer.value[answer.value.length - 1])) {
+      return currentNum[0] != 'I';
+    }
+    return false;
+  }
 
   getAnswer () {
     return answer.value;
@@ -26,7 +32,7 @@ class HomeController {
   void addAlg (String n) {
     answer.value += n;
     currentNum += n;
-    if(currentNum != '0' && currentNum[0] == '0') {
+    if(currentNum != '0' && currentNum[0] == '0' && currentNum[1] != '.') {
       answer.value = answer.value.substring(0, answer.value.length - currentNum.length) + currentNum.substring(1, currentNum.length);
       currentNum = currentNum.substring(1, currentNum.length);
     } 
@@ -44,15 +50,39 @@ class HomeController {
     tryIsCalculable();
   }
 
-
-  void removeChar () {
-    if (answer.value.length == 1) {
-      answer.value = '0';
-      currentNum = '0';
-    } else {
-      answer.value = answer.value.substring(0, answer.value.length - 1);
-      currentNum = answer.value.substring(0, answer.value.length - 1);
+  void addDot() {
+    if (currentNum[0] != 'I') {
+      answer.value += '.';
+      currentNum += '.';
+      tryIsCalculable();
     }
+  }
+
+  void addPerCent() {
+    if (isPercentable()) {
+      
+      double aux = double.parse(currentNum)/100;    
+      answer.value = answer.value.substring(0, answer.value.length - currentNum.length) + aux.toString();
+      currentNum = aux.toString();
+      
+      tryIsCalculable();
+    }
+  }
+
+  void removeChar() {
+      if (answer.value.length == 1) {
+        answer.value = '0';
+        currentNum = '0';
+      } else {
+        answer.value = answer.value.substring(0, answer.value.length - 1);
+        if (currentNum.length != 1) {
+          currentNum = currentNum.substring(0, currentNum.length - 1);
+        }
+        if (isNotOp(answer.value[answer.value.length - 1])) {
+          currentNum = answer.value;
+        } 
+      }
+   
     tryIsCalculable();
   }
 

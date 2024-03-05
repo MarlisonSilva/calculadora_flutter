@@ -43,7 +43,17 @@ class HomePageState extends State {
               children: [
                 Expanded(child: TextButton(onPressed: () { controller.clear(); }, child: Text('AC', style: TextStyle(color: Colors.amberAccent),))),
                 Expanded(child: TextButton(onPressed: () { controller.removeChar(); }, child: Icon(Icons.backspace_outlined, size: 15, color: Colors.amberAccent,))),
-                Expanded(child: TextButton(onPressed: () {}, child: Text('%', style: TextStyle(color: Colors.amberAccent),))),
+                Expanded(
+                  child: TextButton(
+                    onPressed: () { controller.addPerCent(); }, 
+                    child: AnimatedBuilder(
+                      animation: controller.answer,
+                      builder: (context, build) {
+                        return Text('%', style: TextStyle(color: controller.isPercentable() ? Colors.amberAccent : Colors.redAccent),);
+                      },
+                    )
+                  )
+                ),
                 Expanded(child: TextButton(onPressed: () { controller.addOp('/'); }, child: Text('\u00F7', style: TextStyle(color: Colors.amberAccent),))),
               ],
             ),
@@ -78,7 +88,7 @@ class HomePageState extends State {
               children: [
                 const Expanded(child: SizedBox()),
                 Expanded(child: TextButton(onPressed: () { controller.addAlg('0'); }, child: Text('0'))),
-                Expanded(child: TextButton(onPressed: () {}, child: Text(','))),
+                Expanded(child: TextButton(onPressed: () { controller.addDot(); }, child: Text(','))),
                 Expanded(
                   child: AnimatedBuilder(
                       animation: controller.isCalculable,
